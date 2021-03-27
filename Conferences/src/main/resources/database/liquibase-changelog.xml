@@ -1,0 +1,82 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="25.1911" author="marsel">
+        <createTable tableName="ACCOUNT">
+            <column name="ACCOUNT_ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="LOGIN" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROLE" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="26.1402" author="marsel">
+        <createTable tableName="PRESENTATION">
+            <column name="PRESENTATION_ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="TITLE" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TEXT" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="ROOM">
+            <column name="ROOM_ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="NAME" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="SCHEDULE">
+            <column name="SCHEDULE_ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="BEGIN_DATE" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_DATE" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROOM_ID" type="bigint">
+                <constraints nullable="false" foreignKeyName="Schedule_Room" references="ROOM(ROOM_ID)"/>
+            </column>
+            <column name="PRESENTATION_ID" type="bigint">
+                <constraints nullable="false" foreignKeyName="Schedule_Presentation" references="PRESENTATION(PRESENTATION_ID)"/>
+            </column>
+        </createTable>
+        <createTable tableName="ACCOUNT_PRESENTATION">
+            <column name="ACCOUNT_ID" type="bigint">
+                <constraints nullable="false" foreignKeyName="Presentation_Account" references="ACCOUNT(ACCOUNT_ID)"/>
+            </column>
+            <column name="PRESENTATION_ID" type="bigint">
+                <constraints nullable="false" foreignKeyName="Account_Presentation" references="PRESENTATION(PRESENTATION_ID)"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="ACCOUNT_PRESENTATION" columnNames="ACCOUNT_ID,PRESENTATION_ID"/>
+    </changeSet>
+
+    <!--Создание аккаунта админа (пароль: admin) и слушателя (пароль: test), а также трех аудиторий-->
+    <changeSet id="27.2249" author="marsel">
+        <sql>
+            insert into account (login, password, role) values ('admin','$2a$10$8wzvKbkG.cnwsKtuxZNR9OuVbDKjWbFHUVTRWbfKyWZge7isWLUry','ADMIN');
+            insert into account (login, password, role) values ('test','$2a$10$O7WrWTD.hEsL4aZ5HD711OdaPAnJNRG.JuvBRZH9jK3lQvO9VZrly','LISTENER');
+            insert into room (name) values ('Первая');
+            insert into room (name) values ('Вторая');
+            insert into room (name) values ('Третья');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

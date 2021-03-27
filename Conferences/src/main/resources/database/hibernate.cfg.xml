@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+    <session-factory>
+        <mapping class="team404.conference.modules.account.model.Account"/>
+        <mapping class="team404.conference.modules.presentation.model.Presentation"/>
+        <mapping class="team404.conference.modules.room.model.Room"/>
+        <mapping class="team404.conference.modules.schedule.model.Schedule"/>
+    </session-factory>
+
+</hibernate-configuration>
