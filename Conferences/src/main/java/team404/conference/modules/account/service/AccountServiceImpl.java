@@ -3,10 +3,10 @@ package team404.conference.modules.account.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team404.conference.modules.account.dto.AccountDto;
+import team404.conference.general.exception.ApiException;
+import team404.conference.general.exception.StatusCode;
 import team404.conference.modules.account.dto.AccountSafeDto;
 import team404.conference.modules.account.model.Account;
 import team404.conference.modules.account.model.Role;
@@ -23,7 +23,6 @@ public class AccountServiceImpl implements AccountService {
 
     private final SimpleDao simpleDao;
     private final GlobalMapper mapper;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -33,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
             Optional<Account> optionalAccount = simpleDao.findById(Account.class, accountSafeDto.getId());
 
             account = optionalAccount.orElseThrow(() -> {
-                throw new IllegalArgumentException("Account with such id does not found");
+                throw new ApiException("Account with such id does not found", "account.id", StatusCode.SC_404);
             });
         } else {
             account = new Account();
@@ -56,7 +55,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> optionalAccount = simpleDao.findById(Account.class, userDetails.getAccount().getId());
 
         Account account = optionalAccount.orElseThrow(() -> {
-            throw new IllegalArgumentException("Account with such id does not found");
+            throw new ApiException("Account with such id does not found", "presentation.id", StatusCode.SC_404);
         });
 
         return mapper.map(account, AccountSafeDto.class);

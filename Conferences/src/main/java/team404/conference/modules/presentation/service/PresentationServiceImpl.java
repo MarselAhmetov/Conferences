@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team404.conference.general.config.mapping.GlobalMapper;
+import team404.conference.general.exception.ApiException;
+import team404.conference.general.exception.StatusCode;
 import team404.conference.general.repository.SimpleDao;
 import team404.conference.modules.account.dto.AccountSafeDto;
 import team404.conference.modules.account.model.Account;
@@ -37,12 +39,12 @@ public class PresentationServiceImpl implements PresentationService {
         if (scheduleDto.getPresentation() != null && scheduleDto.getPresentation().getId() != null) {
             Optional<Presentation> optionalPresentation = presentationRepository.findById(scheduleDto.getPresentation().getId());
             presentation = optionalPresentation.orElseThrow(() -> {
-                throw new IllegalArgumentException("Presentation with such id does not exists");
+                throw new ApiException("Presentation with such id does not exists", "presentation.id", StatusCode.SC_404);
             });
 
             Optional<Schedule> scheduleOptional = scheduleRepository.findById(scheduleDto.getId());
             schedule = scheduleOptional.orElseThrow(() -> {
-                throw new IllegalArgumentException("Presentation is not in schedule");
+                throw new ApiException("Presentation is not in schedule", "presentation", StatusCode.SC_404);
             });
 
         } else {
@@ -63,13 +65,13 @@ public class PresentationServiceImpl implements PresentationService {
                             Optional<Account> optionalAccount = simpleDao.findById(Account.class, presenter.getId());
 
                             presenters.add(optionalAccount.orElseThrow(() -> {
-                                throw new IllegalArgumentException("One of presenters does not exist");
+                                throw new ApiException("One of presenters does not exist", "presenter.id", StatusCode.SC_404);
                             }));
                         });
 
                 presentation.setPresenters(presenters);
             } else {
-                throw new IllegalArgumentException("Presenters can't be empty");
+                throw new ApiException("Presenters can't be empty", "presentation.presenters", StatusCode.SC_400);
             }
         }
 
@@ -77,14 +79,14 @@ public class PresentationServiceImpl implements PresentationService {
         if (scheduleDto.getRoom() != null) {
             Optional<Room> roomOptional = simpleDao.findById(Room.class, scheduleDto.getRoom().getId());
             room = roomOptional.orElseThrow(() -> {
-                throw new IllegalArgumentException("Room with such id does not exists");
+                throw new ApiException("Room with such id does not exists", "room.id", StatusCode.SC_404);
             });
 
             schedule.setRoom(room);
         }
 
         if (!isTimeFree(room, scheduleDto.getBeginDate(), scheduleDto.getEndDate())) {
-            throw new IllegalArgumentException("This time is busy");
+            throw new ApiException("This time is busy", "presentation.date", StatusCode.SC_400);
         }
 
         schedule.setBeginDate(scheduleDto.getBeginDate());
@@ -113,7 +115,7 @@ public class PresentationServiceImpl implements PresentationService {
         Optional<Account> optionalAccount = simpleDao.findById(Account.class, presenterDto.getId());
 
         Account account = optionalAccount.orElseThrow(() -> {
-            throw new IllegalArgumentException("Presenter with such id does not exists");
+            throw new ApiException("Presenter with such id does not exists", "presenter.id", StatusCode.SC_404);
         });
         return mapper.mapAsList(
                 presentationRepository.getPresentationsByPresentersContains(account),
@@ -133,7 +135,7 @@ public class PresentationServiceImpl implements PresentationService {
     @Override
     public PresentationDto getById(Long id) {
         Presentation presentation = presentationRepository.findById(id).orElseThrow(() -> {
-            throw new IllegalArgumentException("Presentation with such id does not exists");
+            throw new ApiException("Presentation with such id does not exists", "presentation.id", StatusCode.SC_404);
         });
         return mapper.map(presentation, PresentationDto.class);
     }

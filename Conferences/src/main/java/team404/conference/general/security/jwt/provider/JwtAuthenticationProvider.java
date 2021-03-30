@@ -2,7 +2,6 @@ package team404.conference.general.security.jwt.provider;
 
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,12 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import team404.conference.general.exception.ApiException;
+import team404.conference.general.exception.StatusCode;
 import team404.conference.modules.account.model.Account;
 import team404.conference.general.repository.SimpleDao;
 import team404.conference.general.security.jwt.authentication.JwtAuthentication;
 import team404.conference.general.security.jwt.details.UserDetailsImpl;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Component
@@ -45,7 +45,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         Optional<Account> optionalAccount = simpleDao.findById(Account.class, Long.parseLong(claims.getSubject()));
 
         Account account = optionalAccount.orElseThrow(() -> {
-            throw new IllegalArgumentException("Account with such id does not found");
+            throw new ApiException("Account with such id does not found", "account.id", StatusCode.SC_400);
         });
 
         userDetails = UserDetailsImpl.builder()
