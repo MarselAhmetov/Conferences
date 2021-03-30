@@ -14,7 +14,7 @@
 
 `GET: /api/presentation` - Получение данных обо всех презентациях
 
-`GET: /api/presentation/presenter/{id}` - Получить презентацию по id
+`GET: /api/presentation/{id}` - Получить презентацию по id
 
 ### Доступно только PRESENTER'у
 

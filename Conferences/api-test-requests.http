@@ -1,0 +1,98 @@
+POST http://localhost:8080/api/signup
+Content-Type: application/json
+
+{
+  "login": "test2",
+  "password": "test2"
+}
+
+###
+POST http://localhost:8080/api/signIn
+Content-Type: application/json
+
+{
+  "login": "admin",
+  "password": "admin"
+}
+
+###
+POST http://localhost:8080/api/account
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjE3MTgzNTc5fQ.xYfarrpkBXZpuA35y1tdykmK1w0cVfMchRCcPkRtcxs
+
+{
+  "id": 3,
+  "login": "presenter",
+  "role": "PRESENTER"
+}
+
+###
+POST http://localhost:8080/api/signIn
+Content-Type: application/json
+
+{
+  "login": "presenter",
+  "password": "test2"
+}
+
+###
+POST http://localhost:8080/api/presentation
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiZXhwIjoxNjE3MTgzNjgwfQ.fxyP-hLvVI6Q6w4il0sEn8g7gvnwjFAAdXorJCS03cE
+
+{
+  "beginDate": "2021-03-21T18:11:02.165+0300",
+  "endDate": "2021-03-22T18:11:01.165+0300",
+  "room": {
+    "id": 3
+  },
+  "presentation": {
+    "title": "Презентация",
+    "text": "Текст презентации, который не содержит в себе особого смысла",
+    "presenters": [
+      {
+        "id": 3
+      }
+    ]
+  }
+}
+
+###
+GET http://localhost:8080/api/presentation/36
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiZXhwIjoxNjE3MTgzNjgwfQ.fxyP-hLvVI6Q6w4il0sEn8g7gvnwjFAAdXorJCS03cE
+
+
+###
+GET http://localhost:8080/api/presentation/presenter
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiZXhwIjoxNjE3MTgzNjgwfQ.fxyP-hLvVI6Q6w4il0sEn8g7gvnwjFAAdXorJCS03cE
+
+{
+  "id": 3
+}
+
+###
+DELETE http://localhost:8080/api/presentation
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiZXhwIjoxNjE3MTgzNjgwfQ.fxyP-hLvVI6Q6w4il0sEn8g7gvnwjFAAdXorJCS03cE
+
+{
+  "id": 36
+}
+
+###
+GET http://localhost:8080/api/account/current
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjE3MTgzNTc5fQ.xYfarrpkBXZpuA35y1tdykmK1w0cVfMchRCcPkRtcxs
+
+###
+GET http://localhost:8080/api/schedule/sorted
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjE3MTgzNTc5fQ.xYfarrpkBXZpuA35y1tdykmK1w0cVfMchRCcPkRtcxs
+
+###
+GET http://localhost:8080/api/presentation/presenter/36
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjE3MTgzNTc5fQ.xYfarrpkBXZpuA35y1tdykmK1w0cVfMchRCcPkRtcxs
+
+{
+  "id": 2
+}

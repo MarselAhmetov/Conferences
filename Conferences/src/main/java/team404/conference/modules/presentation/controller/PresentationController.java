@@ -53,7 +53,7 @@ public class PresentationController {
 
     @ApiOperation(value = "Get Presentation by id")
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/presenter/{id}")
+    @GetMapping("/{id}")
     public PresentationDto getPresentation(@ApiParam(name = "Presentation id") @PathVariable Long id) {
         return presentationService.getById(id);
     }
